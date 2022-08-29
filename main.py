@@ -26,26 +26,23 @@ st.markdown("""
             This app is the result of the implementation of the **Bachelor of Computer Science and Engineering Thesis**
             by **Alya Nurindah Setiawan (11201812006)** which aims to find out the comparison of the results 
             of the accuracy of 3 classification algorithms **(Naive Bayes, Classification and Regression Tree, and Random Forest)**
-            with the heart disease dataset. You can upload a dataset of heart disease patients to find out which algorithm is the most accurate.
+            with the coronary heart disease dataset. 
             """)
 
 heart_data = pd.read_csv('heartdisease1.csv')
 heartdisease = heart_data.drop(columns = ['target'])
 df = pd.concat([heartdisease], axis = 0)
 
-st.sidebar.header('Dataset')
-
-file = st.sidebar.file_uploader("Upload your file.", type = ["csv"])
-
 X = heart_data.drop(columns = ['target'])
 y = heart_data['target']
 
-st.subheader('Preprocessed Dataset')
-if file is not None:
-    st.write(df)
-else:
-    st.write('This is an example dataset, please upload your dataset file.')
-    st.write(df)
+st.subheader('Dataset')
+st.markdown("""
+            The data used is taken from the Kaggle website with a CSV file type consisting of a total of 1025 pieces of data. 
+            The total data of 496 patients had coronary heart disease and 529 patients did not have coronary heart disease. 
+            This data was taken in 1988 from a hospital and consists of four databases namely Cleveland, Hungary, Switzerland, and Long Beach V.
+            """)
+st.write(df)
 
 st.subheader('Exploratory Data Analysis')
 st.write('Shape of the data is ', X.shape)
@@ -58,8 +55,6 @@ algorithm = st.sidebar.selectbox('Select the algorithm model.', ('Naive Bayes',
 def newparam(choose_algorithm):
     params = dict()
     if choose_algorithm == 'Classification and Regression Tree':
-        criterionCART = st.sidebar.selectbox('criterion', ('gini', 'entropy', 'log_loss'))
-        params['criterionCART'] = criterionCART
         max_depthCART = st.sidebar.slider('max_depth', 2, 15)
         params['max_depthCART'] = max_depthCART
         
@@ -68,8 +63,6 @@ def newparam(choose_algorithm):
         params['n_estimators'] = n_estimators
         max_depthRF = st.sidebar.slider('max_depth', 2, 15)
         params['max_depthRF'] = max_depthRF
-        criterionRF = st.sidebar.selectbox('criterion', ('gini', 'entropy', 'log_loss'))
-        params['criterionRF'] = criterionRF
         
     return params
 
@@ -80,13 +73,11 @@ def classification(choose_algorithm, params):
     if choose_algorithm == 'Naive Bayes':
         algo = GaussianNB()
     elif choose_algorithm == 'Classification and Regression Tree':
-        algo = DecisionTreeClassifier(criterion = params['criterionCART'],
-                                      max_depth = params['max_depthCART'],
+        algo = DecisionTreeClassifier(max_depth = params['max_depthCART'],
                                       random_state = 0)
     else:
         algo = RandomForestClassifier(n_estimators = params['n_estimators'],
                                       max_depth = params['max_depthRF'],
-                                      criterion = params['criterionRF'],
                                       random_state = 0)
     return algo
 
