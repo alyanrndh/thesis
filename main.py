@@ -48,17 +48,17 @@ st.subheader('Exploratory Data Analysis')
 st.write('Shape of the data is ', X.shape)
 
 st.sidebar.header('Model Selection')
-algorithm = st.sidebar.selectbox('Select the algorithm model.', ('Naive Bayes', 
-                                                          'Classification and Regression Tree',
-                                                          'Random Forest'))
+algorithm = st.sidebar.selectbox('Select the algorithm model.', ('GA', 
+                                                          'FL',
+                                                          'NN'))
     
 def newparam(choose_algorithm):
     params = dict()
-    if choose_algorithm == 'Classification and Regression Tree':
+    if choose_algorithm == 'FL':
         max_depthCART = st.sidebar.slider('max_depth', 2, 15)
         params['max_depthCART'] = max_depthCART
         
-    elif choose_algorithm == 'Random Forest':
+    elif choose_algorithm == 'NN':
         n_estimators = st.sidebar.slider('n_estimators', 1, 100)
         params['n_estimators'] = n_estimators
         max_depthRF = st.sidebar.slider('max_depth', 2, 15)
@@ -70,9 +70,9 @@ params = newparam(algorithm)
             
 def classification(choose_algorithm, params):
     algo = None
-    if choose_algorithm == 'Naive Bayes':
+    if choose_algorithm == 'GA':
         algo = GaussianNB()
-    elif choose_algorithm == 'Classification and Regression Tree':
+    elif choose_algorithm == 'FL':
         algo = DecisionTreeClassifier(max_depth = params['max_depthCART'],
                                       random_state = 0)
     else:
